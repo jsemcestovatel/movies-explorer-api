@@ -1,2 +1,2 @@
 # movies-explorer-api
-бэкенд часть приложения movies-explorer-
+бэкенд часть приложения movies-explorer
