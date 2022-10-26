@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 // const cors = require('cors');
 
 const routes = require('./routes/index');
-// const { handlerErrors } = require('./middlewares/errors');
+const { handlerErrors } = require('./middlewares/errors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 // const { cors } = require('./middlewares/cors');
 
@@ -40,6 +40,6 @@ app.use(errorLogger);
 app.use(errors());
 
 // централизованный обработчик ошибок
-// app.use(handlerErrors);
+app.use(handlerErrors);
 
 module.exports = app;
