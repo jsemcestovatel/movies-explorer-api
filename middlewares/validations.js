@@ -1,6 +1,8 @@
 const { celebrate, Joi } = require('celebrate');
 
 const regularUrl = /(https?:\/\/)([www.]?[a-zA-Z0-9-]+\.)([^\s]{2,})/;
+const regularEng = /^[a-z0-9\-\s]+$/gi;
+const regularRus = /^[а-яё\-\s]+$/gi;
 
 module.exports.validateSignIn = celebrate({
   body: Joi.object().keys({
@@ -33,8 +35,8 @@ module.exports.validateMovie = celebrate({
     description: Joi.string().required(),
     image: Joi.string().pattern(regularUrl).required(),
     trailerLink: Joi.string().pattern(regularUrl).required(),
-    nameRU: Joi.string().required(),
-    nameEN: Joi.string().required(),
+    nameRU: Joi.string().pattern(regularRus).required(),
+    nameEN: Joi.string().pattern(regularEng).required(),
     thumbnail: Joi.string().pattern(regularUrl).required(),
     movieId: Joi.number().required(),
   }),
