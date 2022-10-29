@@ -7,17 +7,20 @@ const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const ConflictError = require('../errors/conflict-err');
 
+const {
+  ConflictMessage,
+  NotAuthorizedMessage,
+  NotFoundUserMessage,
+  BadRequestMessage,
+} = require('../utils/const');
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.createUser = (req, res, next) => {
-  const {
-    name, email, password,
-  } = req.body;
+  const { name, email, password } = req.body;
   bcrypt
     .hash(password, 10)
-    .then((hash) => User.create({
-      name, email, password: hash,
-    }))
+    .then((hash) => User.create({ name, email, password: hash }))
     .then((user) => {
       res.status(200).send({
         name: user.name,
@@ -26,11 +29,11 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким e-mail уже существует.'));
+        next(new ConflictError(ConflictMessage));
         return;
       }
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные.'));
+        next(new BadRequestError(BadRequestMessage));
         return;
       }
       next(err);
@@ -46,13 +49,13 @@ module.exports.updateUser = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь с указанным _id не найден.');
+        throw new NotFoundError(NotFoundUserMessage);
       }
       res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные.'));
+        next(new BadRequestError(BadRequestMessage));
         return;
       }
       next(err);
@@ -63,7 +66,7 @@ module.exports.getUserMe = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден.');
+        throw new NotFoundError(NotFoundUserMessage);
       }
       res.status(200).send(user);
     })
@@ -85,6 +88,6 @@ module.exports.login = (req, res, next) => {
       res.status(200).send({ token });
     })
     .catch(() => {
-      next(new NotAuthorizedError('Неверно введён пароль или почта'));
+      next(new NotAuthorizedError(NotAuthorizedMessage));
     });
 };

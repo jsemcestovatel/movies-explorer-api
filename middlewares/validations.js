@@ -1,8 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-
-const regularUrl = /(https?:\/\/)([www.]?[a-zA-Z0-9-]+\.)([^\s]{2,})/;
-const regularEng = /^[a-z0-9\-\s]+$/gi;
-const regularRus = /^[а-яё\-\s]+$/gi;
+const { regularUrl, regularEng, regularRus } = require('../utils/const');
 
 module.exports.validateSignIn = celebrate({
   body: Joi.object().keys({
