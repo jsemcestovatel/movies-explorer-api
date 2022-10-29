@@ -27,3 +27,5 @@ module.exports.regularRus = /^[а-яё\-\s]+$/i;
 
 // технические сообщения
 module.exports.FilmDeleteMessage = 'Удалено';
+module.exports.NotValidURL = 'Некорректный формат ссылки';
+module.exports.NotValidEmail = 'Некорректный формат почты';
