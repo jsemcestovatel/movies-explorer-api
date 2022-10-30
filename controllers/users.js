@@ -13,8 +13,7 @@ const {
   NotFoundUserMessage,
   BadRequestMessage,
 } = require('../utils/const');
-
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { secretKey } = require('../utils/config');
 
 module.exports.createUser = (req, res, next) => {
   const { name, email, password } = req.body;
@@ -78,13 +77,7 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'testkey',
-        {
-          expiresIn: '7d',
-        },
-      );
+      const token = jwt.sign({ _id: user._id }, secretKey, { expiresIn: '7d' });
       res.status(200).send({ token });
     })
     .catch(() => {
