@@ -1,5 +1,5 @@
-# movies-explorer-api
-бэкенд часть приложения movies-explorer
+# movies-explorer
+бэкенд часть приложения
 
 ## Сетевые данные
 * IP 51.250.11.245
