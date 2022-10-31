@@ -1,6 +1,7 @@
-const ERROR_CODE = 500;
 const NotFoundError = require('../errors/not-found-err');
 const { NotFoundMessage, DefaultMessage } = require('../utils/const');
+
+const { ERROR_CODE } = require('../utils/config');
 
 module.exports.handlerErrors = (err, req, res, next) => {
   const { statusCode = ERROR_CODE, message } = err;

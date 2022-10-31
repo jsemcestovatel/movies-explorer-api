@@ -29,3 +29,4 @@ module.exports.regularRus = /^[а-яё\-\s]+$/i;
 module.exports.FilmDeleteMessage = 'Удалено';
 module.exports.NotValidURL = 'Некорректный формат ссылки';
 module.exports.NotValidEmail = 'Некорректный формат почты';
+module.exports.RateLimiterMessage = 'Превышено число запросов';

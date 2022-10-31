@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 
-const { NotValidEmail, BadRequestMessage } = require('../utils/const');
+const { NotValidEmail, NotAuthorizedMessage } = require('../utils/const');
+const { NotAuthorizedError } = require('../errors/not-authorized-err');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -32,12 +33,12 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error(BadRequestMessage));
+        return Promise.reject(new NotAuthorizedError(NotAuthorizedMessage));
       }
 
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          return Promise.reject(new Error(BadRequestMessage));
+          return Promise.reject(new NotAuthorizedError(NotAuthorizedMessage));
         }
         return user;
       });

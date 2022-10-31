@@ -7,11 +7,14 @@ const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 // const cors = require('cors');
 
-const routes = require('./routes/index');
+const routes = require('./routes');
 const { handlerErrors } = require('./middlewares/errors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { rateLimiter } = require('./middlewares/ratelimiter');
+const { mongoURL, mongoSettings } = require('./utils/config');
 // const { cors } = require('./middlewares/cors');
 
 const app = express();
@@ -21,17 +24,15 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-// подключаемся к серверу mongo
-mongoose.connect('mongodb://localhost:27017/moviedb', {
-  useNewUrlParser: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false,
-  useUnifiedTopology: true,
-});
-
+app.use(helmet());
 // подключаем логгер запросов
 app.use(requestLogger);
+
+// подключаем лимитер запросов
+app.use(rateLimiter);
+
+// подключаемся к серверу mongo
+mongoose.connect(mongoURL, mongoSettings);
 
 // маршрутизация
 app.use(routes);
