@@ -1,8 +1,8 @@
 // конфигурация параметров приложения
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET, URL_BD } = process.env;
 
 // mongoDB
-module.exports.mongoURL = 'mongodb://localhost:27017/moviedb';
+module.exports.mongoURL = NODE_ENV === 'production' ? URL_BD : 'mongodb://localhost:27017/moviedb';
 module.exports.mongoSettings = {
   useNewUrlParser: true,
   // useCreateIndex: true,

@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 // const cors = require('cors');
 
-const routes = require('./routes/index');
+const routes = require('./routes');
 const { handlerErrors } = require('./middlewares/errors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { rateLimiter } = require('./middlewares/ratelimiter');
@@ -25,13 +25,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(helmet());
+// подключаем логгер запросов
+app.use(requestLogger);
+
+// подключаем лимитер запросов
 app.use(rateLimiter);
 
 // подключаемся к серверу mongo
 mongoose.connect(mongoURL, mongoSettings);
-
-// подключаем логгер запросов
-app.use(requestLogger);
 
 // маршрутизация
 app.use(routes);
