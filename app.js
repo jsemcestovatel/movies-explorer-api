@@ -15,11 +15,11 @@ const { handlerErrors } = require('./middlewares/errors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { rateLimiter } = require('./middlewares/ratelimiter');
 const { mongoURL, mongoSettings } = require('./utils/config');
-// const { cors } = require('./middlewares/cors');
+const { cors } = require('./middlewares/cors');
 
 const app = express();
 
-// app.use(cors);
+app.use(cors);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
