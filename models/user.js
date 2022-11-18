@@ -35,13 +35,11 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
     .select('+password')
     .then((user) => {
       if (!user) {
-        console.log('NFU');
         return Promise.reject(new NotAuthorizedError(NotAuthorizedMessage));
       }
 
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          // console.log('password error');
           return Promise.reject(new NotAuthorizedError(NotAuthorizedMessage));
         }
         return user;
