@@ -51,8 +51,13 @@ module.exports.updateUser = (req, res, next) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      // if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         next(new BadRequestError(BadRequestMessage));
+        return;
+      }
+      if (err.code === 11000) {
+        next(new ConflictError(ConflictMessage));
         return;
       }
       next(err);
