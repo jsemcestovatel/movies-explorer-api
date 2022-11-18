@@ -10,8 +10,10 @@ const {
   ConflictMessage,
   NotFoundUserMessage,
   BadRequestMessage,
+  NotAuthorizedMessage,
 } = require('../utils/const');
 const { secretKey } = require('../utils/config');
+const NotAuthorizedError = require('../errors/not-authorized-err');
 
 module.exports.createUser = (req, res, next) => {
   const { name, email, password } = req.body;
@@ -78,10 +80,17 @@ module.exports.getUserMe = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  return User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, secretKey, { expiresIn: '7d' });
-      res.status(200).send({ token });
-    })
-    .catch(next);
+  return (
+    User.findUserByCredentials(email, password)
+      .then((user) => {
+        const token = jwt.sign({ _id: user._id }, secretKey, {
+          expiresIn: '7d',
+        });
+        res.status(200).send({ token });
+      })
+      // .catch(next);
+      .catch(() => {
+        next(new NotAuthorizedError(NotAuthorizedMessage));
+      })
+  );
 };
